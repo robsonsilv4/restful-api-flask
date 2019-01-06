@@ -65,6 +65,9 @@ def token_required(f):
 @app.route('/user', methods=['GET'])
 @token_required
 def get_all_users(current_user):
+    if not current_user.admin:
+        return jsonify({'message': 'Cannot perform that function!'})
+
     users = User.query.all()
 
     output = []
@@ -83,6 +86,9 @@ def get_all_users(current_user):
 @app.route('/user/<public_id>', methods=['GET'])
 @token_required
 def get_one_user(current_user, public_id):
+    if not current_user.admin:
+        return jsonify({'message': 'Cannot perform that function!'})
+
     user = User.query.filter_by(public_id=public_id).first()
     if not user:
         return jsonify({'message': 'No User found!'})
@@ -115,6 +121,9 @@ def create_user(current_user):
 @app.route('/user/<public_id>', methods=['PUT'])
 @token_required
 def promote_user(current_user, public_id):
+    if not current_user.admin:
+        return jsonify({'message': 'Cannot perform that function!'})
+
     user = User.query.filter_by(public_id=public_id).first()
     if not user:
         return jsonify({'message': 'Not User found!'})
@@ -128,6 +137,9 @@ def promote_user(current_user, public_id):
 @app.route('/user/<public_id>', methods=['DELETE'])
 @token_required
 def delete_user(current_user, public_id):
+    if not current_user.admin:
+        return jsonify({'message': 'Cannot perform that function!'})
+
     user = User.query.filter_by(public_id=public_id).first()
     if not user:
         return jsonify({'message': 'Not User found!'})
